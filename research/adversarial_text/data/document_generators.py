@@ -16,6 +16,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+from io import open
 
 from collections import namedtuple
 import csv
@@ -199,7 +200,7 @@ def imdb_documents(dataset='train',
       if is_validation and not include_validation:
         continue
 
-      with open(os.path.join(FLAGS.imdb_input_dir, d, filename)) as imdb_f:
+      with open(os.path.join(FLAGS.imdb_input_dir, d, filename), encoding='utf-8') as imdb_f:
         content = imdb_f.read()
       yield Document(
           content=content,
@@ -209,7 +210,7 @@ def imdb_documents(dataset='train',
           add_tokens=True)
 
   if FLAGS.amazon_unlabeled_input_file and include_unlabeled:
-    with open(FLAGS.amazon_unlabeled_input_file) as rt_f:
+    with open(FLAGS.amazon_unlabeled_input_file, encoding='utf-8') as rt_f:
       for content in rt_f:
         yield Document(
             content=content,
@@ -246,7 +247,7 @@ def dbpedia_documents(dataset='train',
 
   tf.logging.info('Generating DBpedia documents...')
 
-  with open(os.path.join(FLAGS.dbpedia_input_dir, dataset + '.csv')) as db_f:
+  with open(os.path.join(FLAGS.dbpedia_input_dir, dataset + '.csv'), encoding='utf-8') as db_f:
     reader = csv.reader(db_f)
     for row in reader:
       # 10% of the data is randomly held out
@@ -297,7 +298,7 @@ def rcv1_documents(dataset='train',
     if dataset == 'train':
       datasets.append('unlab')
   for dset in datasets:
-    with open(os.path.join(FLAGS.rcv1_input_dir, dset + '.csv')) as db_f:
+    with open(os.path.join(FLAGS.rcv1_input_dir, dset + '.csv'), encoding='utf-8') as db_f:
       reader = csv.reader(db_f)
       for row in reader:
         # 10% of the data is randomly held out
@@ -354,7 +355,7 @@ def rt_documents(dataset='train',
     data_files.append((FLAGS.amazon_unlabeled_input_file, None))
 
   for filename, class_label in data_files:
-    with open(filename) as rt_f:
+    with open(filename, encoding='utf-8') as rt_f:
       for content in rt_f:
         if class_label is None:
           # Process Amazon Review data for unlabeled dataset
